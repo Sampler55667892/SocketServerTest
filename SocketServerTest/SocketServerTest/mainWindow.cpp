@@ -1,4 +1,4 @@
-#include "socketServer.h" // Windows.h ‚æ‚èæ‚ÉƒCƒ“ƒNƒ‹[ƒh‚·‚é (WinSock2.h ‚ğ Windows.h ‚æ‚èæ‚ÉƒCƒ“ƒNƒ‹[ƒh‚·‚é‚½‚ß (‚»‚¤‚µ‚È‚¢‚ÆƒRƒ“ƒpƒCƒ‹ƒGƒ‰[))
+#include "socketServer.h" // Windows.h ã‚ˆã‚Šå…ˆã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ (WinSock2.h ã‚’ Windows.h ã‚ˆã‚Šå…ˆã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ã™ã‚‹ãŸã‚ (ãã†ã—ãªã„ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼))
 #include "mainWindow.h"
 #include "testConstants.h"
 #include "resource.h"

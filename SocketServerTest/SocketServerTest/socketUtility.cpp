@@ -9,7 +9,7 @@ namespace ws_server
 	// (cf.) bind (http://chokuto.ifdef.jp/advanced/function/bind.html)
 	// (cf.) listen (http://chokuto.ifdef.jp/advanced/function/listen.html)
 	// (cf.) accept (http://chokuto.ifdef.jp/advanced/function/accept.html)
-	// (cf.) Windows�\�P�b�g�̃G���[�R�[�h�A�l�A����шӖ� (https://support.microsoft.com/ja-jp/help/819124/windows-sockets-error-codes-values-and-meanings)
+	// (cf.) Windowsソケットのエラーコード、値、および意味 (https://support.microsoft.com/ja-jp/help/819124/windows-sockets-error-codes-values-and-meanings)
 	// (cf.) winerror.h
 	const char * SocketUtility::convertToErrorText(unsigned int errorCode)
 	{

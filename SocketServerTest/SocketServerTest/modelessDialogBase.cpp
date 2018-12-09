@@ -5,7 +5,7 @@ namespace frame
 	ModelessDialogBase::ModelessDialogBase(WindowInitSetting& initSetting, int templateId) :
 		WindowBase::WindowBase(initSetting), templateId(templateId)
 	{
-		// init() ‚Í”h¶æ‚ÅŒÄ‚Ô
+		// init() ã¯æ´¾ç”Ÿå…ˆã§å‘¼ã¶
 	}
 
 	ModelessDialogBase::~ModelessDialogBase()

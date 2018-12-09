@@ -54,7 +54,7 @@ namespace frame
 		else if (message == 0x0037) return "WM_QUERYDRAGICON";
 		else if (message == 0x0039) return "WM_COMPAREITEM";
 		else if (message == 0x003D) return "WM_GETOBJECT";
-		if (message == 0x0041) return "WM_COMPACTING"; // C1061 ëŒçÙ
+		if (message == 0x0041) return "WM_COMPACTING"; // C1061 ÂØæÁ≠ñ
 		else if (message == 0x0044) return "WM_COMMNOTIFY";
 		else if (message == 0x0046) return "WM_WINDOWPOSCHANGING";
 		else if (message == 0x0047) return "WM_WINDOWPOSCHANGED";

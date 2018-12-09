@@ -3,19 +3,19 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
-#include <WinSock2.h> // Windows.h ‚æ‚èæ‚É Include ‚µ‚È‚¢‚ÆƒRƒ“ƒpƒCƒ‹ƒGƒ‰[
+#include <WinSock2.h> // Windows.h ã‚ˆã‚Šå…ˆã« Include ã—ãªã„ã¨ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã‚¨ãƒ©ãƒ¼
 #include "socketInitProcState.h"
 
 namespace ws_server
 {
-	// [‘O’ñ] ƒ|[ƒg–ˆ‚ÉƒCƒ“ƒXƒ^ƒ“ƒX‚ªˆÙ‚È‚é
+	// [å‰æ] ãƒãƒ¼ãƒˆæ¯ã«ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹ãŒç•°ãªã‚‹
 	class SocketServer
 	{
 		public:
 			SocketServer();
 			virtual ~SocketServer();
 			bool init(unsigned short port, SocketInitProcState& procState);
-			bool receive(char ** text, bool& bufferOverflow); // ƒXƒŒƒbƒhƒuƒƒbƒN‚ğŠ|‚¯‚é
+			bool receive(char ** text, bool& bufferOverflow); // ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ–ãƒ­ãƒƒã‚¯ã‚’æ›ã‘ã‚‹
 			bool send(char * text);
 			bool close();
 			int getLastError();

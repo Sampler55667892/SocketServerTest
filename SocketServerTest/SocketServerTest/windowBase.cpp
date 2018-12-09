@@ -7,7 +7,7 @@ namespace frame
 		windowTitleId(initSetting.windowTitleId), windowClassId(initSetting.windowClassId),
 		windowStyle(initSetting.windowStyle), windowRect(initSetting.windowRect), parentWindowHandle(initSetting.parentWindowHandle)
 	{
-		// init() ‚Í”h¶æ‚ÅŒÄ‚Ô
+		// init() ã¯æ´¾ç”Ÿå…ˆã§å‘¼ã¶
 	}
 
 	WindowBase::~WindowBase()

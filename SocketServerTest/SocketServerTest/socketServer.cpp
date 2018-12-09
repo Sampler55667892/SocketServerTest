@@ -76,8 +76,8 @@ namespace ws_server
 
 		sockaddr_in clientAddress;
 		int addressLength = sizeof(clientAddress);
-		// accept() (Ú‘±{s‚Ì‹–‰Â) ‚ÅƒXƒŒƒbƒhƒuƒƒbƒN‚ªŠ|‚©‚é
-		// ƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚Ì connect() ‚ÅƒXƒŒƒbƒhƒuƒƒbƒN‚ªŠO‚ê‚é
+		// accept() (æ¥ç¶šæ–½è¡Œã®è¨±å¯) ã§ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ–ãƒ­ãƒƒã‚¯ãŒæ›ã‹ã‚‹
+		// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰ã® connect() ã§ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ–ãƒ­ãƒƒã‚¯ãŒå¤–ã‚Œã‚‹
 		this->clientSocket = ::accept(serverSocket, (sockaddr *)&clientAddress, &addressLength);
 		if (clientSocket == INVALID_SOCKET) {
 			lastError = ::WSAGetLastError();
@@ -99,8 +99,8 @@ namespace ws_server
 
 		::memset(receivedString, sizeof(receivedString), 0);
 		int flags = 0;
-		// recv() ‚É‚æ‚èƒT[ƒo‘¤‚ÅƒXƒŒƒbƒhƒuƒƒbƒN‚ªŠ|‚©‚é
-		// ƒNƒ‰ƒCƒAƒ“ƒg‚©‚ç‚Ì send() ‚ğó‚¯‚ÄƒXƒŒƒbƒhƒuƒƒbƒN‚ªŠO‚ê‚é
+		// recv() ã«ã‚ˆã‚Šã‚µãƒ¼ãƒå´ã§ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ–ãƒ­ãƒƒã‚¯ãŒæ›ã‹ã‚‹
+		// ã‚¯ãƒ©ã‚¤ã‚¢ãƒ³ãƒˆã‹ã‚‰ã® send() ã‚’å—ã‘ã¦ã‚¹ãƒ¬ãƒƒãƒ‰ãƒ–ãƒ­ãƒƒã‚¯ãŒå¤–ã‚Œã‚‹
 		int receivedDataBytes = ::recv(clientSocket, receivedString, sizeof(receivedString), flags);
 		if (receivedDataBytes == SOCKET_ERROR) {
 			lastError = ::WSAGetLastError();
@@ -112,7 +112,7 @@ namespace ws_server
 		}
 		receivedString[receivedDataBytes] = '\0';
 
-		// ƒq[ƒvƒƒ‚ƒŠ[Šm•Û (ŒÄo‚µŒ³‚Å‰ğ•ú‚³‚ê‚é‚±‚Æ‘z’è)
+		// ãƒ’ãƒ¼ãƒ—ãƒ¡ãƒ¢ãƒªãƒ¼ç¢ºä¿ (å‘¼å‡ºã—å…ƒã§è§£æ”¾ã•ã‚Œã‚‹ã“ã¨æƒ³å®š)
 		*text = ::_strdup(receivedString);
 
 		return true;
