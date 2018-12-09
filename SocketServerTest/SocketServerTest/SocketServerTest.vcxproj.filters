@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Frame">
+      <UniqueIdentifier>{eb34aa6b-c0c9-4593-9c4f-ffd8389b4c31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Windows">
+      <UniqueIdentifier>{d0b5b321-1d1d-48b7-b195-0b51601ae0c5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Socket">
+      <UniqueIdentifier>{a0bf5887-8a81-4a5a-9cb1-7b4fe11cbe1c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="_Tester">
+      <UniqueIdentifier>{7ea7cb13-b8de-402b-b943-1225532b28a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource">
+      <UniqueIdentifier>{45051549-4f06-4ad3-b4ac-3c0ced769ef3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="windowBase.cpp">
+      <Filter>Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="mainWindow.cpp">
+      <Filter>Windows</Filter>
+    </ClCompile>
+    <ClCompile Include="modelessDialogBase.cpp">
+      <Filter>Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="windowUtility.cpp">
+      <Filter>Frame</Filter>
+    </ClCompile>
+    <ClCompile Include="socketServer.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="socketUtility.cpp">
+      <Filter>Socket</Filter>
+    </ClCompile>
+    <ClCompile Include="instancesMap.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="windowBase.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="windowMap.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="mainWindow.h">
+      <Filter>Windows</Filter>
+    </ClInclude>
+    <ClInclude Include="modelessDialogBase.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="windowInitSetting.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="frameConstants.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="testConstants.h" />
+    <ClInclude Include="windowUtility.h">
+      <Filter>Frame</Filter>
+    </ClInclude>
+    <ClInclude Include="_testerFunctionPointer.h">
+      <Filter>_Tester</Filter>
+    </ClInclude>
+    <ClInclude Include="socketServer.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="socketUtility.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="socketInitProcState.h">
+      <Filter>Socket</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Resource</Filter>
+    </ClInclude>
+    <ClInclude Include="instancesMap.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="SocketServerTest.rc">
+      <Filter>Resource</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
