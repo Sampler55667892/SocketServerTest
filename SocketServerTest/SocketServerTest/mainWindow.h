@@ -1,7 +1,7 @@
 #ifndef _mainWindow_h_
 #define _mainWindow_h_
 
-#include <vector>
+#include <list>
 #include "modelessDialogBase.h"
 
 namespace test
@@ -25,8 +25,10 @@ namespace test
 			// Handlers
 			virtual void onInitialize(HWND dialogHandle);
 			virtual void onCommand(HWND dialogHandle, int commandId);
+			virtual void onClose(HWND dialogHandle);
 		private:
-			vector<char *> consoleTexts;
+			list<const char *> consoleTexts;
+			static const int MaxCountLinesOnConsole;
 	};
 }
 

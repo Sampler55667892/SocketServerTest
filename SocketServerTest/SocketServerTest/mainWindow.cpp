@@ -24,16 +24,30 @@ namespace test
 	void MainWindow::addTextToConsole(const char * text)
 	{
 		HWND console = ::GetDlgItem(ModelessDialogBase::getDialogHandle(), IDC_CONSOLE);
-		if (console != nullptr) {
-			consoleTexts.push_back(::_strdup(text));
-			auto size = (int)consoleTexts.size();
-			string text;
-			for (auto i = size - 1; i >= 0; --i) {
-				text += consoleTexts[i];
-				text += "\r\n";
+		if (console == nullptr)
+			return;
+
+		consoleTexts.push_front(::_strdup(text)); // ヒープを積む
+
+		string outputText;
+		int countLines = 0;
+		list<const char *> deleteTargets;
+		for (list<const char *>::iterator itr = consoleTexts.begin(); itr != consoleTexts.end(); ++itr) {
+			outputText += *itr;
+			outputText += "\r\n";
+			if (countLines++ > MaxCountLinesOnConsole) {
+				// コレクションのループ中にコレクション自体を変更するとエラーになる
+				deleteTargets.push_back(*itr);
 			}
-			::SendMessageA(console, WM_SETTEXT, (WPARAM)NULL, (LPARAM)text.c_str());
 		}
+		if ((int)deleteTargets.size() > 0) {
+			for (list<const char *>::iterator itr = deleteTargets.begin(); itr != deleteTargets.end(); ++itr) {
+				delete[] *itr; // ヒープ以外が積まれるとエラーになる
+				consoleTexts.pop_back();
+			}
+		}
+
+		::SendMessageA(console, WM_SETTEXT, (WPARAM)NULL, (LPARAM)outputText.c_str());
 	}
 
 	void MainWindow::addTextToConsole(const char * text, const char * header)
@@ -44,9 +58,6 @@ namespace test
 
 	void MainWindow::clearConsole()
 	{
-		auto size = (int)consoleTexts.size();
-		for (auto i = 0; i < size; ++i)
-			delete consoleTexts[i];
 		consoleTexts.clear();
 	}
 
@@ -87,4 +98,10 @@ namespace test
 				WindowUtility::showErrorMessage(ModelessDialogBase::getDialogHandle(), SocketUtility::convertToErrorText(server->getLastError()), "SOCKET ERROR (send)");
 		}
 	}
+
+	void MainWindow::onClose(HWND dialogHandle)
+	{
+	}
+
+	const int MainWindow::MaxCountLinesOnConsole = 256;
 }
