@@ -21,17 +21,20 @@ namespace frame
 			virtual void show();
 			virtual void onInitialize(HWND dialogHandle);
 			virtual void onCommand(HWND dialogHandle, int commandId);
+			virtual void onClose(HWND dialogHandle);
 		private:
 			void registerEventHandlers();
 			static INT_PTR CALLBACK dialogProc(HWND dialogHandle, unsigned int message, WPARAM wParameter, LPARAM lParameter);
 
 			typedef void(ModelessDialogBase::*InitDialogMessageHandler)(HWND);
 			typedef void(ModelessDialogBase::*CommandMessageHandler)(HWND, int);
+			typedef void(ModelessDialogBase::*CloseMessageHandler)(HWND);
 
 			HWND dialogHandle;
 			int templateId;
 			static list<pair<ModelessDialogBase *, ModelessDialogBase::InitDialogMessageHandler>> initDialogHandlers;
 			static list<pair<ModelessDialogBase *, ModelessDialogBase::CommandMessageHandler>> commandHandlers;
+			static list<pair<ModelessDialogBase *, ModelessDialogBase::CloseMessageHandler>> closeHandlers;
 	};
 }
 

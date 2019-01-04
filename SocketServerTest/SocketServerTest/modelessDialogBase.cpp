@@ -52,10 +52,15 @@ namespace frame
 		//::EndDialog(dialogHandle, (INT_PTR)TRUE);
 	}
 
+	void ModelessDialogBase::onClose(HWND dialogHandle)
+	{
+	}
+
 	void ModelessDialogBase::registerEventHandlers()
 	{
 		initDialogHandlers.push_back(pair<ModelessDialogBase *, ModelessDialogBase::InitDialogMessageHandler>(this, (InitDialogMessageHandler)&ModelessDialogBase::onInitialize));
 		commandHandlers.push_back(pair<ModelessDialogBase *, ModelessDialogBase::CommandMessageHandler>(this, (CommandMessageHandler)&ModelessDialogBase::onCommand));
+		closeHandlers.push_back(pair<ModelessDialogBase *, ModelessDialogBase::CloseMessageHandler>(this, (CloseMessageHandler)&ModelessDialogBase::onClose));
 	}
 
 	INT_PTR CALLBACK ModelessDialogBase::dialogProc(HWND dialogHandle, unsigned int message, WPARAM wParameter, LPARAM lParameter)
@@ -77,6 +82,10 @@ namespace frame
 				break;
 			}
 			case WM_CLOSE: {
+				for (list<pair<ModelessDialogBase *, ModelessDialogBase::CloseMessageHandler>>::iterator itr = closeHandlers.begin(); itr != closeHandlers.end(); ++itr) {
+					auto pair = *itr;
+					(pair.first->*pair.second)(dialogHandle);
+				}
 				::PostQuitMessage(0);
 				break;
 			}
@@ -86,4 +95,5 @@ namespace frame
 
 	list<pair<ModelessDialogBase *, ModelessDialogBase::InitDialogMessageHandler>> ModelessDialogBase::initDialogHandlers;
 	list<pair<ModelessDialogBase *, ModelessDialogBase::CommandMessageHandler>> ModelessDialogBase::commandHandlers;
+	list<pair<ModelessDialogBase *, ModelessDialogBase::CloseMessageHandler>> ModelessDialogBase::closeHandlers;
 }
