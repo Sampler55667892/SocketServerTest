@@ -15,6 +15,90 @@ namespace ws_server
 		cleanup(&dummy);
 	}
 
+	bool SocketServer::init(unsigned short port, SocketInitProcState& procState)
+	{
+		if (!initPort(port, procState))
+			return false;
+		if (!startListen(procState))
+			return false;
+		return true;
+	}
+
+	bool SocketServer::receive(char ** text, bool& bufferOverflow, bool& disconnected)
+	{
+		*text = nullptr;
+		bufferOverflow = false;
+		disconnected = false;
+
+		::memset(receivedString, sizeof(receivedString), 0);
+		int flags = 0;
+		// recv() によりサーバ側でスレッドブロックが掛かる
+		// クライアントからの send() を受けてスレッドブロックが外れる
+		int receivedDataBytes = ::recv(clientSocket, receivedString, sizeof(receivedString), flags);
+		if (receivedDataBytes == 0) {
+			//::shutdown(clientSocket, SD_BOTH); // 以降の recv で -1 が返るようになる
+			// クライアントからの切断時に長さ 0 のメッセージが送信される
+			disconnected = true;
+			return false;
+		}
+		if (receivedDataBytes == SOCKET_ERROR) {
+			lastError = ::WSAGetLastError();
+			return false;
+		}
+		if (SizeOfReceiveBuffer <= receivedDataBytes) {
+			bufferOverflow = true;
+			return false;
+		}
+		receivedString[receivedDataBytes] = '\0';
+
+		// ヒープメモリー確保 (呼出し元で解放されること想定)
+		*text = ::_strdup(receivedString);
+
+		return true;
+	}
+
+	bool SocketServer::send(char * text)
+	{
+		int flags = 0;
+		if (::send(clientSocket, text, ::strlen(text), flags) == SOCKET_ERROR) {
+			lastError = ::WSAGetLastError();
+			return false;
+		}
+		return true;
+	}
+
+	bool SocketServer::close()
+	{
+		if (::closesocket(this->serverSocket) == INVALID_SOCKET) {
+			lastError = ::WSAGetLastError();
+			return false;
+		}
+		this->serverSocket = 0;
+		if (::closesocket(this->clientSocket) == INVALID_SOCKET) {
+			lastError = ::WSAGetLastError();
+			return false;
+		}
+		return true;
+	}
+
+	// 一端 close() して再開
+	bool SocketServer::reset(int port)
+	{
+		if (!close())
+			return false;
+
+		SocketInitProcState procState;
+		if (!init(port, procState))
+			return false;
+
+		return true;
+	}
+
+	int SocketServer::getLastError()
+	{
+		return lastError;
+	}
+
 	bool SocketServer::startup(int * errorCode)
 	{
 		WSADATA wsaData;
@@ -30,17 +114,6 @@ namespace ws_server
 			*errorCode = ::WSAGetLastError();
 			return false;
 		}
-		return true;
-	}
-
-#pragma region init
-
-	bool SocketServer::init(unsigned short port, SocketInitProcState& procState)
-	{
-		if (!initPort(port, procState))
-			return false;
-		if (!startListen(procState))
-			return false;
 		return true;
 	}
 
@@ -85,67 +158,6 @@ namespace ws_server
 		}
 		procState.passed_accept = true;
 
-		return true;
-	}
-
-#pragma endregion // init
-
-#pragma region communicate
-
-	bool SocketServer::receive(char ** text, bool& bufferOverflow)
-	{
-		*text = nullptr;
-		bufferOverflow = false;
-
-		::memset(receivedString, sizeof(receivedString), 0);
-		int flags = 0;
-		// recv() によりサーバ側でスレッドブロックが掛かる
-		// クライアントからの send() を受けてスレッドブロックが外れる
-		int receivedDataBytes = ::recv(clientSocket, receivedString, sizeof(receivedString), flags);
-		if (receivedDataBytes == SOCKET_ERROR) {
-			lastError = ::WSAGetLastError();
-			return false;
-		}
-		if (SizeOfReceiveBuffer <= receivedDataBytes) {
-			bufferOverflow = true;
-			return false;
-		}
-		receivedString[receivedDataBytes] = '\0';
-
-		// ヒープメモリー確保 (呼出し元で解放されること想定)
-		*text = ::_strdup(receivedString);
-
-		return true;
-	}
-
-	bool SocketServer::send(char * text)
-	{
-		int flags = 0;
-		if (::send(clientSocket, text, ::strlen(text), flags) == SOCKET_ERROR) {
-			lastError = ::WSAGetLastError();
-			return false;
-		}
-		return true;
-	}
-
-#pragma endregion // communicate
-
-	int SocketServer::getLastError()
-	{
-		return lastError;
-	}
-
-	bool SocketServer::close()
-	{
-		if (::closesocket(this->serverSocket) == INVALID_SOCKET) {
-			lastError = ::WSAGetLastError();
-			return false;
-		}
-		this->serverSocket = 0;
-		if (::closesocket(this->clientSocket) == INVALID_SOCKET) {
-			lastError = ::WSAGetLastError();
-			return false;
-		}
 		return true;
 	}
 

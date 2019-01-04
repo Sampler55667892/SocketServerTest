@@ -7,6 +7,8 @@
 #include "resource.h"
 #include "instancesMap.h"
 
+#define LISTENING_PORT	8080
+
 using namespace std;
 using namespace test;
 using namespace frame;
@@ -25,9 +27,8 @@ void windowThread(HINSTANCE exeInstance, int commandShow)
 	MainWindow * mainWindow = new MainWindow(initSetting, IDD_MAIN_WINDOW);
 }
 
-void receiveThread()
+void receiveThread(int port)
 {
-	int port = 8080;
 	SocketServer server;
 	if (server.getLastError() != NO_ERROR) {
 		WindowUtility::showErrorMessage(nullptr, SocketUtility::convertToErrorText(server.getLastError()), "SOCKET ERROR (ctor)");
@@ -41,20 +42,26 @@ void receiveThread()
 		return;
 	}
 
-	const int sleepTimeSec = 100;
+	const int sleepTimeMillisec = 100;
 	for (;;) {
 		char * text = nullptr;
 		bool bufferOverflow = false;
-		if (!server.receive(&text, bufferOverflow)) {
+		bool disconnected = false;
+		if (!server.receive(&text, bufferOverflow, disconnected)) {
+			if (disconnected) {
+				if (!server.reset(port))
+					break;
+				continue;
+			}
 			if (bufferOverflow)
 				WindowUtility::showErrorMessage(nullptr, "Buffer overflow happened.", "SOCKET ERROR (receive)");
 			else
 				WindowUtility::showErrorMessage(nullptr, SocketUtility::convertToErrorText(server.getLastError()), "SOCKET ERROR (receive)");
-			continue;
+			break;
 		}
 		if (text == nullptr) {
 			WindowUtility::showErrorMessage(nullptr, "Received text is empty.", "SOCKET ERROR (receive)");
-			continue;
+			break;
 		}
 
 		auto mainWindow = (MainWindow *)InstancesMap::get(INSTANCE_KEY_MAIN_WINDOW);
@@ -63,17 +70,19 @@ void receiveThread()
 		if (text != nullptr)
 			delete text;
 
-		this_thread::sleep_for(chrono::milliseconds(sleepTimeSec));
+		this_thread::sleep_for(chrono::milliseconds(sleepTimeMillisec));
 	}
+
+	WindowUtility::showErrorMessage(nullptr, "Exit receiveThread.", "SOCKET ERROR (receive)");
 }
 
 int __stdcall WinMain(HINSTANCE exeInstance, HINSTANCE prevInstance, LPSTR commandLine, int commandShow)
 {
 	thread winThread(windowThread, exeInstance, commandShow);
-	thread recvThread(receiveThread);
+	thread recvThread(receiveThread, LISTENING_PORT);
 
+	recvThread.detach(); // winThread の停止でプログラムを終了させる
 	winThread.join();
-	recvThread.join();
 
 	return 0;
 }
